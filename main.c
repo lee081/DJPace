@@ -165,6 +165,8 @@ int main(void)
     
     sci_init();                 // Initialize the SCI port
     uint8_t x;
+    int time = 0;
+    int flag = 0;
     DDRD |=(1<<DDD7);
     ADMUX |= (1<<REFS0);
     ADMUX &=~(1<<REFS1);
@@ -177,12 +179,22 @@ int main(void)
         ADCSRA |= (1 << ADSC); // Start a conversion
         while (ADCSRA & (1 << ADSC)); // wait for conversion complete
         x = ADCH; // Get converted value
-        sci_num(x);
-        _delay_ms(10);
+        //sci_num(x);
+        _delay_ms(1);
         UDR0 = 0;
-        if(x > 82)
-            PORTD |= (1<<PD7);
-        else
-            PORTD &= ~(1<<PD7);
+        if(x < 0xFF && flag == 0)
+        {
+            flag = 1;
+            time = 0;
+            sci_num(x);
+        }
+        if(x < 0xFF && flag == 1)
+        {
+            time++;
+        }
+        if(x == 0xFF && flag == 1)
+        {
+            flag = 0;
+        }
     }
 }
