@@ -26,8 +26,6 @@
 #define BAUD 9600              // Baud rate used by the LCD
 #define MYUBRR FOSC/16/BAUD-1
 
-//serial port functions 
-
 
 int main(void)
 {

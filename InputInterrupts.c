@@ -35,7 +35,7 @@ void InputInterruptsInit()
     TCCR1B |= (1 << CS12);      // Set prescaler for divide by 256,
 }
 
-ISR(TIMER1_COMPA_vect)
+void calculateHeart()
 {
     if(HeartMonitorReadValue())
     {
@@ -52,4 +52,10 @@ ISR(TIMER1_COMPA_vect)
     {
         high = 0;
     }
+
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+    calculateHeart();
 }

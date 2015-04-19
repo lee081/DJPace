@@ -19,5 +19,6 @@
 #define __final__InputInterrupts__
 
 void InputInterruptsInit();
+void calculatedHeart();
 
 #endif /* defined(__final__HeartMonitor__) */
