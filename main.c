@@ -20,7 +20,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "Serial.h"
+#include "InputInterrupts.h"
 
 #define FOSC 9830400		// Clock frequency
 #define BAUD 9600              // Baud rate used by the LCD
@@ -31,18 +31,7 @@
 
 int main(void)
 {
-    
-    sci_init();
-    uint8_t x;
-    int time = 0;
-    int flag = 0;
-    ADMUX |= (1<<REFS0);
-    ADMUX &=~(1<<REFS1);
-    ADMUX |= (1<<ADLAR);
-    //ADMUX |= (3<<MUX0);
-    //ADMUX &= (0xf0 | (3<<MUX0));
-    ADCSRA |= (7<<ADPS0);
-    ADCSRA |= (1<<ADEN);
+    /*
     while (1) {
         ADCSRA |= (1 << ADSC);
         while (ADCSRA & (1 << ADSC));
@@ -63,5 +52,7 @@ int main(void)
         {
             flag = 0;
         }
-    }
+    }*/
+    InputInterruptsInit();
+    while(1);
 }
