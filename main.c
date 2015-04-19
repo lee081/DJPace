@@ -38,66 +38,7 @@
 #define BAUD 9600              // Baud rate used by the LCD
 #define MYUBRR FOSC/16/BAUD-1
 
-void OpenSPI()
-{
-    SPCR = 0x50;
-}
-
-void HardwareReset()
-{
-    DDRB &= ~_BV(DDB0);
-    _delay_ms(1);
-    DDRB |= _BV(DDB0);
-    _delay_ms(200);
-    // pull PB0 (digital 8) briefly low
-    // 1 mS is enough
-    // return PB0 high
-    // wait 200 mS for reset to finish
-}
-
-void CloseSPI()
-{
-    SPCR = 0x00;
-}
-
-uint8_t Xfer(uint8_t data)
-{
-    SPDR = data;
-    while (!(SPSR & 0x80));
-    return SPDR;
-}
-// you can use uint8_t for byte
-// initiate transfer
-// wait for transfer to complete
-
-void WriteData (uint8_t b)
-{
-    Xfer(b);
-}
-
-void WriteCmd (uint8_t cmd)
-{
-    ClearBit(PORTB,1);
-    Xfer(cmd);
-    SetBit(PORTB,1);
-}
-
-void InitDisplay()
-{
-    HardwareReset();
-    WriteCmd(SLPOUT);
-    _delay_ms(150);
-    WriteCmd(COLMOD);
-    WriteData(0x05);
-    WriteCmd(DISPON);
-    // initialize display controller
-    // take display out of sleep mode
-    // wait 150mS for TFT driver circuits
-    // select color mode:
-    // mode 5 = 16bit pixels (RGB565)
-    // turn display on!
-}
-
+//serial port functions 
 void sci_num(uint8_t num)
 {
     char first = (num>>4)&0x0f;
@@ -133,9 +74,6 @@ void sci_init(void) {
     // one stop bit, 8 data bits
 }
 
-/*
- sci_out - Output a byte to SCI port
- */
 void sci_out(unsigned char ch)
 {
     while ( (UCSR0A & (1<<UDRE0)) == 0);
@@ -148,10 +86,6 @@ unsigned char sci_in()
     return UDR0;
 }
 
-/*
- sci_outs - Print the contents of the character string "s" out the SCI
- port. The string must be terminated by a zero byte.
- */
 void sci_outs(unsigned char *s)
 {
     unsigned char ch;
@@ -160,14 +94,19 @@ void sci_outs(unsigned char *s)
     sci_out(ch);
 }
 
+void checkA2D()
+{
+    
+}
+
 int main(void)
 {
     
-    sci_init();                 // Initialize the SCI port
+    sci_init();
     uint8_t x;
     int time = 0;
     int flag = 0;
-    DDRD |=(1<<DDD7);
+    //DDRD |=(1<<DDD7);
     ADMUX |= (1<<REFS0);
     ADMUX &=~(1<<REFS1);
     ADMUX |= (1<<ADLAR);
@@ -176,10 +115,9 @@ int main(void)
     ADCSRA |= (7<<ADPS0);
     ADCSRA |= (1<<ADEN);
     while (1) {
-        ADCSRA |= (1 << ADSC); // Start a conversion
-        while (ADCSRA & (1 << ADSC)); // wait for conversion complete
-        x = ADCH; // Get converted value
-        //sci_num(x);
+        ADCSRA |= (1 << ADSC);
+        while (ADCSRA & (1 << ADSC));
+        x = ADCH;
         _delay_ms(1);
         UDR0 = 0;
         if(x < 0xFF && flag == 0)
