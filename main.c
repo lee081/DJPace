@@ -21,6 +21,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "InputInterrupts.h"
+#include "LCD.h"
 
 #define FOSC 9830400		// Clock frequency
 #define BAUD 9600              // Baud rate used by the LCD
@@ -29,28 +30,28 @@
 
 int main(void)
 {
-    /*
-    while (1) {
-        ADCSRA |= (1 << ADSC);
-        while (ADCSRA & (1 << ADSC));
-        x = ADCH;
-        _delay_ms(1);
-        UDR0 = 0;
-        if(x < 0xFF && flag == 0)
-        {
-            flag = 1;
-            time = 0;
-            sci_num(x);
-        }
-        if(x < 0xFF && flag == 1)
-        {
-            time++;
-        }
-        if(x == 0xFF && flag == 1)
-        {
-            flag = 0;
-        }
-    }*/
-    InputInterruptsInit();
-    while(1);
+    _delay_ms(4000);
+    spi_init_master();
+    
+    
+    init_lcdd();
+    while(1)
+    {
+        color_bars();
+        _delay_ms(1000);
+        //PORTB &= ~(1 << PB2);
+        //SPDR = 0x12;
+        //while(!(SPSR & (1<<SPIF)));  // wait until transmission is complete
+        //spiwrite(0x15);
+        //SPCR = temp_backup;
+        //PORTB |= (1 << PB2);
+        //writecommand(0x00);
+        //writedata(0x19);
+        
+        
+        
+        
+    }
+    //InputInterruptsInit();
+    //while(1);
 }
