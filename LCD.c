@@ -64,7 +64,8 @@ void spi_init_master(void)
     
     SPCR |= (1 << MSTR);//set device as Master
     
-    SPCR |= (1<<SPR0)|(1<<SPR1);
+    SPCR &= ~(1<<SPR0);
+    SPCR &= ~(1<<SPR1);
     SPCR &= ~(1 << DORD); // Sends MSB first
     
     SPCR |= (1 << SPE);// Enable SPI
@@ -155,13 +156,14 @@ void color_bars()
         y2 = y1 + 39;
         //set window to 240x40 strip from [0,y1] to [239, y2]
         //sci_num(0x04);
-        setAddrWindow(0,y1,ILI9341_TFTWIDTH-1, y2);
+        setAddrWindow(40,y1,40, y2);
         //sci_num(0x05);
         //LCD_CS_ACTIVE; //LCD_CS_Active
         //LCD_DC_COMMAND;
         writecommand(ILI9341_RAMWR);
         
-        color = color565(red[j],grn[j], blu[j]);
+        //color = color565(red[j],grn[j], blu[j]);
+        color = color565(0,0,0);
         hi = color >> 8;
         
         lo = color;
@@ -173,6 +175,44 @@ void color_bars()
         }
         
         
+    }
+}
+
+void display_bitmap(uint8_t *array)
+{
+    unsigned char i,j,k;
+    unsigned int color;
+    unsigned int y1, y2;
+    unsigned char hi, lo;
+    unsigned int x, y;
+    
+    uint8_t mask;
+    
+    for(x = 0;x < 320;x++)
+    {
+        for(y = 0;y < 240;y++)
+        {
+            mask = 1<<(7-x%8);
+            setAddrWindow(x, y, x, y);
+            writecommand(ILI9341_RAMWR);
+            
+            if(array[x/8*240+y] & mask == 0)
+            {
+                color = color565(0,0,0);
+            }
+            else
+            {
+                color = color565(0xff, 0xff, 0xff);
+            }
+            //color = color565(red[j],grn[j], blu[j]);
+            hi = color >> 8;
+            
+            lo = color;
+            writedata(hi);
+            writedata(lo);
+            
+            
+        }
     }
 }
 

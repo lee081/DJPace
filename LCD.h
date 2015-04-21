@@ -76,6 +76,9 @@
 #define ILI9341_GMCTRP1 0xE0
 #define ILI9341_GMCTRN1 0xE1
 
+#define SCREENX 320;
+#define SCREENY 240;
+
 #ifndef __final__LCD__
 #define __final__LCD__
 
@@ -89,5 +92,6 @@ void init_lcdd(void);
 void color_bars(void);
 void setAddrWindow(unsigned int, unsigned int, unsigned int, unsigned int);
 unsigned int color565(unsigned char, unsigned char, unsigned char);
+void display_bitmap(uint8_t *);
 
 #endif /* defined(__final__LCD__) */

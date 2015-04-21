@@ -32,12 +32,23 @@ int main(void)
 {
     _delay_ms(4000);
     spi_init_master();
+    uint8_t array[40*240];
     
+    int x, y;
+    
+    for(x = 0;x < 5;x++)
+    {
+        for(y = 0;y < 40;y++)
+        {
+            array[(5+x)*240+40+y] = 0xff;
+        }
+    }
     
     init_lcdd();
     while(1)
     {
-        color_bars();
+        display_bitmap(array);
+        //color_bars();
         _delay_ms(1000);
         //PORTB &= ~(1 << PB2);
         //SPDR = 0x12;
