@@ -29,7 +29,7 @@ void writecommand (unsigned char c)
 void writedata (unsigned char c)
 {
     //DC pin goes high-->data
-    DDRB |= 1 << DDB1;
+    PORTB |= 1 << DDB1;
     //set CS Slave active(low)
     PORTB &= ~(1 << PB2);
     spiwrite(c);
