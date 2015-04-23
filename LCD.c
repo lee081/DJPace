@@ -11,6 +11,7 @@
 uint8_t red[8] = { 0, 0xff, 0, 0, 0xff, 0, 0xff, 0xff };
 uint8_t grn[8] = { 0, 0, 0xff, 0, 0xff, 0xff, 0, 0xff };
 uint8_t blu[8] = { 0, 0, 0, 0xff, 0, 0xff, 0xff, 0xff };
+//uint8_t array[30*320];
 
 void writecommand (unsigned char c)
 {
@@ -52,6 +53,7 @@ void spiwrite(unsigned char c)
 
 void spi_init_master(void)
 {
+    int x, y;
             sci_init();
     DDRB |= (1 << DDB2); // set SS as output
     PORTB |= (1<< PB2); // set SS as 1
@@ -73,7 +75,6 @@ void spi_init_master(void)
     //_dc set to output
     DDRB |= (1 << DDB1);    // D/C
        // sci_num(0x01);
-    
 }
 
 void init_lcdd()//follows Professor Weber's code
@@ -156,57 +157,54 @@ void color_bars()
         y2 = y1 + 39;
         //set window to 240x40 strip from [0,y1] to [239, y2]
         //sci_num(0x04);
-        setAddrWindow(40,y1,40, y2);
+        setAddrWindow(0,y1,239, y2);
         //sci_num(0x05);
         //LCD_CS_ACTIVE; //LCD_CS_Active
         //LCD_DC_COMMAND;
         writecommand(ILI9341_RAMWR);
         
-        //color = color565(red[j],grn[j], blu[j]);
-        color = color565(0,0,0);
+        color = color565(red[j],grn[j], blu[j]);
+        //color = color565(0,0,0);
         hi = color >> 8;
         
         lo = color;
         for (k = 0; k < 40; k++) {      // 40 rows in each bar
-            for (i = 0; i < 240; i++) { // 240 pixels in each row
+           for (i = 0; i < 240; i++) { // 240 pixels in each row
                 writedata(hi);
                 writedata(lo);
-            }
+           }
         }
         
         
     }
 }
 
-void display_bitmap(uint8_t *array)
+void display_bitmap()
 {
-    unsigned char i,j,k;
     unsigned int color;
-    unsigned int y1, y2;
     unsigned char hi, lo;
     unsigned int x, y;
-    
     uint8_t mask;
-    
-    for(x = 0;x < 320;x++)
+    sci_num(0x00);
+    for(x = 0;x < 240;x++)
     {
-        for(y = 0;y < 240;y++)
+        for(y = 0;y < 320;y++)
         {
             mask = 1<<(7-x%8);
-            setAddrWindow(x, y, x, y);
+            setAddrWindow(x, y, x+1, y+1);
             writecommand(ILI9341_RAMWR);
-            
-            if(array[x/8*240+y] & mask == 0)
-            {
-                color = color565(0,0,0);
-            }
-            else
+            color = color565(0,0,0);
+            //if(array[x/8*320+y] & mask == 0)
+            if(x > 20 && x < 40 && y > 20 && y < 40)
             {
                 color = color565(0xff, 0xff, 0xff);
             }
+            else
+            {
+                color = color565(0,0,0);
+            }
             //color = color565(red[j],grn[j], blu[j]);
             hi = color >> 8;
-            
             lo = color;
             writedata(hi);
             writedata(lo);
