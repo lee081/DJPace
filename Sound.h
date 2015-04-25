@@ -6,9 +6,6 @@
 //
 //
 
-#ifndef __final__Sound__
-#define __final__Sound__
-
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -24,9 +21,4 @@
 
 void init_audio(void);
 
-void send_audio_data();
-
-void sequence();
-
-
-#endif /* defined(__final__Sound__) */
+void send_audio_data(uint16_t);

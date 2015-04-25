@@ -1,8 +1,8 @@
 ////pins 4 and 5 of the sound breakout is going to PD2 and PD3.
-#include "Sound.h"
 
 
-uint16_t audio_data;
+#import "Sound.h"
+
 uint16_t audio_address;
 uint16_t volume;
 
@@ -22,29 +22,12 @@ void init_audio()
     PORTB &= ~(1<< PD6);
     _delay_ms(5);
     PORTD |= 1 << PD6;
-    
-    
-    audio_data = 0;
 }
 
-void sequence()
-{
-init_audio();
-audio_data = 0x0001;
-send_audio_data();
-audio_data = 0xfffe;
-_delay_ms(10000);
-send_audio_data();
 
-/* main while loop   */
-while (1) {
-    
-    
-    
-    
-}
-}
-void send_audio_data()
+
+
+void send_audio_data(uint16_t audio_data)
 {
     /*First lower clock for 2ms and send first bit  */
     /*lowering the clock   */
@@ -96,6 +79,7 @@ void send_audio_data()
     /* reset clock and data lines to high  */
     PORTD |= 1 << PB0;         // Set clock output to high
     PORTD |= 1 << PD7;         // Set data output to high
+    
 }
 
 

@@ -12,9 +12,25 @@
 
 int main(void)
 {
-    sequence();
+    //sequence();
+    
+    
+    init_audio();
+    
+    /*
+     audio_data = 0xffff;
+     send_audio_data();*/
+    send_audio_data(0x0001);
+    send_audio_data(0xfffe);
+    _delay_ms(5000);
+    send_audio_data(0x0002);
+    send_audio_data(0xfffe);
+    
+    while(1);
     
     return 0;
+    
+    //return 0;
     //spi_init_master();
     
     //int x, y;
