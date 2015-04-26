@@ -13,12 +13,11 @@
 
 int main(void)
 {
-    init_lcdd();
     _delay_ms(4000);
-    color_bars();
-    _delay_ms(5000);
+    spi_init_master();
+    init_lcdd();
     
-    /*while(1)
+    while(1)
     {
     display_bitmap(0);
     _delay_ms(5000);
@@ -26,7 +25,7 @@ int main(void)
     _delay_ms(5000);
     display_bitmap(2);
     _delay_ms(5000);
-    }*/
+    }
     
     /*init_audio();
 

@@ -12,7 +12,7 @@ uint8_t red[8] = { 0, 0xff, 0, 0, 0xff, 0, 0xff, 0xff };
 uint8_t grn[8] = { 0, 0, 0xff, 0, 0xff, 0xff, 0, 0xff };
 uint8_t blu[8] = { 0, 0, 0, 0xff, 0, 0xff, 0xff, 0xff };
 
-/*int isWhite(int x, int y, int screen)
+int isWhite(int x, int y, int screen)
 {
     x -= 160;
     y -= 120;
@@ -75,7 +75,7 @@ uint8_t blu[8] = { 0, 0, 0, 0xff, 0, 0xff, 0xff, 0xff };
         return 0;
     }
     return 0;
-}*/
+}
 
 void writecommand (unsigned char c)
 {
@@ -249,16 +249,13 @@ void display_bitmap(int screen)
     unsigned char hi, lo;
     unsigned int x, y;
     uint8_t mask;
-    sci_num(0x00);
     for(x = 0;x < 240;x++)
     {
         for(y = 0;y < 320;y++)
         {
-            mask = 1<<(7-x%8);
             setAddrWindow(x, y, x+1, y+1);
             writecommand(ILI9341_RAMWR);
-            if(x < 100 && x > 50 && y < 100 && y > 50)
-            //if(isWhite(x, y, screen))
+            if(isWhite(y, x, screen))
             {
                 color = color565(0xff, 0xff, 0xff);
             }
