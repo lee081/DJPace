@@ -13,9 +13,20 @@
 
 int main(void)
 {
-    sci_init();
+    init_lcdd();
+    _delay_ms(4000);
+    color_bars();
+    _delay_ms(5000);
     
-    sci_num(0xFF);
+    /*while(1)
+    {
+    display_bitmap(0);
+    _delay_ms(5000);
+    display_bitmap(1);
+    _delay_ms(5000);
+    display_bitmap(2);
+    _delay_ms(5000);
+    }*/
     
     /*init_audio();
 

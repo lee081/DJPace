@@ -89,6 +89,6 @@ void init_lcdd(void);
 void color_bars(void);
 void setAddrWindow(unsigned int, unsigned int, unsigned int, unsigned int);
 unsigned int color565(unsigned char, unsigned char, unsigned char);
-void display_bitmap();
+void display_bitmap(int);
 
 #endif /* defined(__final__LCD__) */

@@ -11,7 +11,71 @@
 uint8_t red[8] = { 0, 0xff, 0, 0, 0xff, 0, 0xff, 0xff };
 uint8_t grn[8] = { 0, 0, 0xff, 0, 0xff, 0xff, 0, 0xff };
 uint8_t blu[8] = { 0, 0, 0, 0xff, 0, 0xff, 0xff, 0xff };
-//uint8_t array[30*320];
+
+/*int isWhite(int x, int y, int screen)
+{
+    x -= 160;
+    y -= 120;
+    //selection
+    if(screen == 0)
+    {
+        //border
+        if(x < -150 || x > 150 || y < -110 || y > 110)
+            return 1;
+        if(x > -5 && x < 5)
+            return 1;
+        //H
+        if(y > -90 && y < 90 && x < -25 && x > -35)
+            return 1;
+        if(y > -90 && y < 90 && x > -130 && x < -120)
+            return 1;
+        if(x < -30 && x > -125 && y < 5 && y > -5)
+            return 1;
+        //P
+        if(y > -90 && y < 90 && x > 25 && x < 35)
+            return 1;
+        if(x  > 30 && x < 125 && y < 5 && y > -5)
+            return 1;
+        if(x  > 30 && x < 125 && y < 90 && y > 80)
+            return 1;
+        if(x  > 115 && x < 125 && y < 90 && y > 4)
+            return 1;
+        return 0;
+    }
+    if(screen == 1)
+    {
+        //disc
+        if(x*x+y*y >10000 && x*x+y*y < 12000)
+            return 1;
+        //play
+        if(x > -40 && y > x/2-30 && y < -x/2+30)
+            return 1;
+        //arrow
+        if(x > -140 && x < -100 && y < 100 && y > 90)
+            return 1;
+        if(x < -120 && x/2+170 >y && y > -x/2+20)
+            return 1;
+        return 0;
+    }
+    if(screen == 2)
+    {
+        //disc
+        if(x*x+y*y >10000 && x*x+y*y < 12000)
+            return 1;
+        //pause
+        if(y > -80 && y < 80 && x < 40 && x > 20)
+            return 1;
+        if(y > -80 && y < 80 && x > -40 && x < -20)
+            return 1;
+        //arrow
+        if(x > -140 && x < -100 && y < 100 && y > 90)
+            return 1;
+        if(x < -120 && x/2+170 >y && y > -x/2+20)
+            return 1;
+        return 0;
+    }
+    return 0;
+}*/
 
 void writecommand (unsigned char c)
 {
@@ -179,7 +243,7 @@ void color_bars()
     }
 }
 
-void display_bitmap()
+void display_bitmap(int screen)
 {
     unsigned int color;
     unsigned char hi, lo;
@@ -193,9 +257,8 @@ void display_bitmap()
             mask = 1<<(7-x%8);
             setAddrWindow(x, y, x+1, y+1);
             writecommand(ILI9341_RAMWR);
-            color = color565(0,0,0);
-            //if(array[x/8*320+y] & mask == 0)
-            if(x > 20 && x < 40 && y > 20 && y < 40)
+            if(x < 100 && x > 50 && y < 100 && y > 50)
+            //if(isWhite(x, y, screen))
             {
                 color = color565(0xff, 0xff, 0xff);
             }
@@ -203,7 +266,6 @@ void display_bitmap()
             {
                 color = color565(0,0,0);
             }
-            //color = color565(red[j],grn[j], blu[j]);
             hi = color >> 8;
             lo = color;
             writedata(hi);
